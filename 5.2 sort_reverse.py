@@ -14,5 +14,6 @@ intiger_list = sorted([int(x) for x in (lst)])
 intiger_list.reverse()
 
 #print(intiger_list)
-print("The greatest five numbers in descending order are:",(intiger_list[0:5]))
+print("The greatest five numbers from the list in descending order are:",(intiger_list[0:5]))
+
 
