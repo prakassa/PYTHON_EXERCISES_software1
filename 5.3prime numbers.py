@@ -16,4 +16,4 @@ while number != 0:
 
     number = int(input("Enter your number"))
 
-print("Thank you! program stopped")
+print("Thank you! program stopped.")
