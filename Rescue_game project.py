@@ -36,7 +36,7 @@ def consumption(lat1, lon1, lat2, lon2):
 # Hub airport location
 lat1 =  27.6966
 lon1 =  85.3591
-
+#Fuel_quota = 2 tons
 ICAO2 = input("Enter the ICAO code of airport you want to go")
 
 sql = 'select ident,name as "airport name",longitude_deg as "lon2", latitude_deg as "lat2" from airport where iso_country = "NP" and type = "small_airport"'
@@ -49,6 +49,8 @@ if data:
         if ICAO2 == ident:
             print(f" longitude 0f the airport = {lon2}, latitude of the airport  = {lat2})")
 
-print(f" you spent  {consumption(lat1,lon1,lat2,lon2)} KGs of fuel")
+fuel_Spent = print(f" you spent  {consumption(lat1,lon1,lat2,lon2)} KGs of fuel")
+
+fuel_left = print(f"remaining fuel is {(2000-consumption(lat1, lon1, lat2, lon2))} kgs")
 
 
