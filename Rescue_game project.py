@@ -49,8 +49,7 @@ if data:
         if ICAO2 == ident:
             print(f" longitude 0f the airport = {lon2}, latitude of the airport  = {lat2})")
 
+rescued = print(f"Good job! you rescued {random.randint(0,20)} tourists")
 fuel_Spent = print(f" you spent  {consumption(lat1,lon1,lat2,lon2)} KGs of fuel")
-
 fuel_left = print(f"remaining fuel is {(2000-consumption(lat1, lon1, lat2, lon2))} kgs")
-
 
