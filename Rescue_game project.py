@@ -47,9 +47,9 @@ data = cursor.fetchall()
 if data:
     for ident,name,lon2,lat2 in data:
         if ICAO2 == ident:
-            print(f" longitude 0f the airport = {lon2}, latitude of the airport  = {lat2})")
+            print(f" The airport is {name}. Longitude 0f the airport = {lon2}, Latitude of the airport  = {lat2})")
 
-rescued = print(f"Good job! you rescued {random.randint(0,20)} tourists")
+rescued = print(f"Good job! you rescued {random.randint(0,20)} tourists. Keep going")
 fuel_Spent = print(f" you spent  {consumption(lat1,lon1,lat2,lon2)} KGs of fuel")
 fuel_left = print(f"remaining fuel is {(2000-consumption(lat1, lon1, lat2, lon2))} kgs")
 
