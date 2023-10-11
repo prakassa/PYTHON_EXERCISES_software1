@@ -1,55 +1,122 @@
 import random
-
+from geopy.distance import geodesic as GD
+from geopy import distance
 import mysql.connector
-connection = mysql.connector.connect(
-         host='localhost',
-         port= 3306,
-         database='game',
-         user='root',
-         password='mariadidi',
-         autocommit=True
-         )
+connection =mysql.connector.connect (
+    host='localhost',
+    port=3306,
+    database='flight_game',
+    user='root',
+    password='mariadidi',
+    autocommit= True
+)
+#getting all small airports of Nepal needed for the game
+def get_airports():
+    sql= """SELECT ident, airport.name as airport_name, type, latitude_deg, longitude_deg
+         FROM airport
+         Where iso_country='NP'
+         AND type = 'small_airport'
+         ORDER by RAND()
+         """
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return result
 
-from math import radians, sin, cos, sqrt, atan2
-def consumption(lat1, lon1, lat2, lon2):
-# Radius of the Earth in kilometers
-    R = 6371.0
+def calculate_distance(lat2, lon2):
+    result= GD((lat2,lon2),(27.6966, 85.3591)).km
+    return result
 
-# Convert latitude and longitude from degrees to radians
-    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+def consumption(distance):
+    two_way_fuel = (distance * 0.91)*2
+    return two_way_fuel
 
-# Differences in coordinates
-    dlat = lat2 - lat1
-    dlon = lon2 - lon1
+name = input("Please enter your name")
 
-# Haversine formula
-    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+if name != "":
+    print(f"Captain {name}. Thank you for coming to TIA in this hard time. Welcome to the rescue mission.")
 
-# Calculate the distance
-    distance = R * c
+    print("Enter 1 - to Show the destinations menu")
+    print("Enter 2 -  to launch the rescue flights")
+    rescue = []
+    option = input()
 
-# estimated consumption of a small aircraft
-    two_way_fuel_need = (distance * 0.91) * 2
-    return two_way_fuel_need
+    if option == "1":
+        for airport in get_airports():
+            print(airport)
 
-# Hub airport location
-lat1 =  27.6966
-lon1 =  85.3591
-#Fuel_quota = 2 tons
-ICAO2 = input("Enter the ICAO code of airport you want to go")
+            print("Relaunch to play the game!")
 
-sql = 'select ident,name as "airport name",longitude_deg as "lon2", latitude_deg as "lat2" from airport where iso_country = "NP" and type = "small_airport"'
-cursor = connection.cursor()
-cursor.execute(sql)
-data = cursor.fetchall()
+    elif option =="2":
+        ICAO2 = input("Enter the ICAO code of the airport you want to fly")
+        if ICAO2 != "":
+            sql = 'select ident,name as "airport name",longitude_deg as "lon2", latitude_deg as "lat2" from airport where iso_country = "NP" and type = "small_airport"'
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            data = cursor.fetchall()
 
-if data:
-    for ident,name,lon2,lat2 in data:
-        if ICAO2 == ident:
-            print(f" The airport is {name}. Longitude 0f the airport = {lon2}, Latitude of the airport  = {lat2})")
+            if data:
+                for ident, name, lon2, lat2 in data:
+                    if ICAO2 == ident:
+                        print(f" The airport is {name}. Longitude: {lon2}, Latitude:{lat2})")
 
-rescued = print(f"Good job! you rescued {random.randint(0,20)} tourists. Keep going")
-fuel_Spent = print(f" you spent  {consumption(lat1,lon1,lat2,lon2)} KGs of fuel")
-fuel_left = print(f"remaining fuel is {(2000-consumption(lat1, lon1, lat2, lon2))} kgs")
+                        distance_covered = calculate_distance(lat2, lon2)
+                        print(f"Flight distance: {distance_covered} Kilometers ")
 
+                        rescued_tourists = random.randint(0,20)
+                        print(f"Good job! You rescued {rescued_tourists} tourists. Keep going")
+                        rescue.append(rescued_tourists)
+
+                        print(f"you rescued {sum(rescue)} tourists till now")
+
+
+                        fuel_spent = consumption(distance_covered)
+                        print(f"Fuel spent: {fuel_spent} liters")
+
+                        fuel_left = 3000-fuel_spent
+                        print(f"Remaining Fuel: {fuel_left}")
+
+                        while fuel_left > 0:
+                            ICAO2 = input("Enter the ICAO code of the airport you want to fly")
+                            if ICAO2 != "":
+                                sql = 'select ident,name as "airport name",longitude_deg as "lon2", latitude_deg as "lat2" from airport where iso_country = "NP" and type = "small_airport"'
+                                cursor = connection.cursor()
+                                cursor.execute(sql)
+                                data = cursor.fetchall()
+
+                                if data:
+                                    for ident, name, lon2, lat2 in data:
+                                        if ICAO2 == ident:
+                                            print(f" The airport is {name}. Longitude: {lon2}, Latitude:{lat2})")
+
+                                            distance_covered = calculate_distance(lat2, lon2)
+                                            print(f"Flight distance: {distance_covered} Kilometers ")
+
+                                            rescued_tourists = random.randint(0, 20)
+                                            print(f"Good job! You rescued {rescued_tourists} tourists. Keep going")
+                                            rescue.append(rescued_tourists)
+
+                                            print(f"you rescued {sum(rescue)} tourists till now")
+
+
+                                            fuel_spent = consumption(distance_covered)
+                                            print(f"Fuel spent: {fuel_spent} liters")
+
+                                            fuel_left = fuel_left-fuel_spent
+                                            if fuel_left >= 0:
+                                                print(f"Remaining Fuel: {fuel_left}")
+                                            else:
+                                                print("LOW FUEL")
+
+
+                        print("lOW FUEL. GROUNDED)")
+                        if sum(rescue) > 100:
+                            print(F"EXCELLENT JOB CAPTAIN. YOU GOT THE MEGA REWARD FOR SAVING {sum(rescue)} tourists. YOU ARE GRANTED INTERNATIONAL RESCUE PILOT LISCENCE")
+                        elif sum(rescue) < 15:
+                            print(f"Your flying liscence is ceased for lacking ethics during these hard times. You just rescued {sum(rescue)} tourists. You could have done much better")
+                        else:
+                            print(f"Thank you for your effort, Captain. You saved {sum(rescue)} tourists.")
+
+
+else:
+    print("Program ENDED")
