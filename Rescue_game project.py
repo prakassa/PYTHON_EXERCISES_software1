@@ -92,7 +92,7 @@ if name != "":
                                             distance_covered = calculate_distance(lat2, lon2)
                                             print(f"Flight distance: {distance_covered} Kilometers ")
 
-                                            rescued_tourists = random.randint(0, 20)
+                                            rescued_tourists = random.randint(1, 20)
                                             print(f"Good job! You rescued {rescued_tourists} tourists. Keep going")
                                             rescue.append(rescued_tourists)
 
