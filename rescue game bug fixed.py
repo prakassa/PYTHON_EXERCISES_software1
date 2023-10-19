@@ -39,7 +39,7 @@ if name != "":
     print(f"Captain {name}. Thank you for coming to TIA in this hard time. Welcome to the rescue mission.")
 
     print("Enter 1 - to Show the destinations menu")
-    print("Enter 2 -  to launch the rescue flights")
+    print("Enter 2 - to Launch the rescue flights")
     rescue = []
     option = input()
 
@@ -65,7 +65,7 @@ if name != "":
                         distance_covered = calculate_distance(lat2, lon2)
                         print(f"Flight distance: {distance_covered: .2f} Kilometers ")
 
-                        rescued_tourists = random.randint(0,20)
+                        rescued_tourists = random.randint(1,20)
                         print(f"Good job! You rescued {rescued_tourists} tourists. Keep going")
                         rescue.append(rescued_tourists)
 
@@ -112,8 +112,8 @@ if name != "":
                                                 break
 
 
-                        if sum(rescue) > 100:
-                            print(F"EXCELLENT JOB CAPTAIN. YOU GOT THE MEGA REWARD FOR SAVING {sum(rescue)} tourists. YOU ARE GRANTED INTERNATIONAL RESCUE PILOT LISCENCE")
+                        if sum(rescue) > 50:
+                            print(f"EXCELLENT JOB CAPTAIN. YOU GOT THE MEGA REWARD FOR SAVING {sum(rescue)} TOURISTS. YOU ARE GRANTED INTERNATIONAL RESCUE PILOT LISCENCE")
                         elif sum(rescue) < 15:
                             print(f"Your flying liscence is ceased for lacking ethics during these hard times. You just rescued {sum(rescue)} tourists. You could have done much better")
                         else:
